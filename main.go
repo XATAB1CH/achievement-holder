@@ -30,19 +30,18 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	testUser := User{
-		username: "admin",
-		loggedIn: false,
-	}
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
+	router.Static("assets", "./assets")
+
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"title": testUser.username,
-		})
+		c.HTML(http.StatusOK, "index.html", map[string]string{"title": "Главная страница", "description": "Некая информация"})
 	})
 
-	http.ListenAndServe(":8080", router)
+	router.GET("/login", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "login.html", map[string]string{"title": "Страница входа", "description": "Некая информация"})
+	})
 
+	router.Run(":8080")
 }

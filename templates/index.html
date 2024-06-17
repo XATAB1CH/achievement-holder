@@ -9,19 +9,35 @@
     <header data-bs-theme="dark">
         <div class="navbar navbar-dark bg-dark shadow-sm">
           <div class="container">
-            <a href="#" class="navbar-brand d-flex align-items-center">
-              <img src="images/paper.svg" alt="icon" width="30" height="30" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle>
-              <strong>Achievments</strong>
-            </a>
-          </div>
+            <div class="row">
+              <a class="navbar-brand d-flex align-items-center">
+                <img src="assets/paper.svg" alt="icon" height="30" width="30" class="me-2">
+                <strong>Achievments</strong>
+              </a>
+            </div>
+              <div class="row">
+                <div class="col">
+                  <input class="bg-white text-dark rounded-1" id="signInInput1-1" style="border-radius: 3px;" type="email" placeholder="Email address">
+                </div>
+                <div class="col">
+                  <input class="bg-white text-dark rounded-1" id="signInInput1-1" style="border-radius: 3px;" type="password" placeholder="Password">
+                </div>
+                <div class="col">
+                  <a href="#" class="navbar-brand  ">
+                    <strong style="color: white;">Log in</strong>
+                    <img src="assets/login.svg" alt="icon" height="30" width="30" class="me-2">
+                  </a>
+                </div>
+              </div>
+            </div>
         </div>
       </header>
       <main>
         <section class="py-5 text-center container">
           <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-              <h1 class="fw-light">Зачем это нужно?</h1>
-              <p class="lead text-body-secondary">Хранить важные проекты, пригодятся</p>
+              <h1 class="fw-light">{{.title}}</h1>
+              <p class="lead text-body-secondary">{{.description}}</p>
               <p>
                 <a href="#" class="btn btn-outline-primary">Github</a>
                 <a href="#" class="btn btn-outline-primary">University</a>
@@ -35,7 +51,7 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
                 <div class="col">
                 <div class="card">
-                    <img src="images/bg.jpg" class="card-img-top" alt="...">
+                    <img src="assets/bg.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
                       <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                       <a href="#" class="btn btn-outline-info">Подробнее</a>
