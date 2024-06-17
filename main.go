@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
 type User struct {
@@ -30,13 +30,19 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	testUser := User{
+		username: "admin",
+		loggedIn: false,
+	}
 
-	router := mux.NewRouter()
-	router.HandleFunc("/products/{id:[0-9]+}", loginHandler)
+	router := gin.Default()
+	router.LoadHTMLGlob("templates/*")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title": testUser.username,
+		})
+	})
 
-	router.HandleFunc("/", indexHandler)
-	http.Handle("/", router)
+	http.ListenAndServe(":8080", router)
 
-	fmt.Println("Server is listening...")
-	http.ListenAndServe(":8080", nil)
 }
