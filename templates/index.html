@@ -3,33 +3,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Achievment-holder</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/bootstrap.css">
 </head>
 <body>
     <header data-bs-theme="dark">
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-          <div class="container">
-            <div class="row">
-              <a class="navbar-brand d-flex align-items-center">
-                <img src="assets/paper.svg" alt="icon" height="30" width="30" class="me-2">
-                <strong>Achievments</strong>
-              </a>
-            </div>
-              <div class="row">
-                <div class="col">
-                  <input class="bg-white text-dark rounded-1" id="signInInput1-1" style="border-radius: 3px;" type="email" placeholder="Email address">
-                </div>
-                <div class="col">
-                  <input class="bg-white text-dark rounded-1" id="signInInput1-1" style="border-radius: 3px;" type="password" placeholder="Password">
-                </div>
-                <div class="col">
-                  <a href="#" class="navbar-brand  ">
-                    <strong style="color: white;">Log in</strong>
-                    <img src="assets/login.svg" alt="icon" height="30" width="30" class="me-2">
-                  </a>
-                </div>
+        <div class="navbar navbar-dark bg-dark shadow-sm" style="height: auto;">
+              <div class="m-5">
+                <a class="navbar-brand d-flex align-items-center">
+                  <img src="assets/paper.svg" alt="icon" height="30" width="30" class="me-2">
+                  <strong>Достижения</strong>
+                </a>
               </div>
-            </div>
+              <div class="m-5">
+                <a href="http://127.0.0.1:8080/signin" class="btn btn-success">Войти</a>
+              </div>
         </div>
       </header>
       <main>
@@ -39,9 +26,8 @@
               <h1 class="fw-light">{{.title}}</h1>
               <p class="lead text-body-secondary">{{.description}}</p>
               <p>
-                <a href="#" class="btn btn-outline-primary">Github</a>
-                <a href="#" class="btn btn-outline-primary">University</a>
-                <a href="#" class="btn btn-outline-primary">Courses</a>
+                <a href="#" class="btn btn-outline-primary">Github проекты</a>
+                <a href="#" class="btn btn-outline-primary">Университетские мероприятия</a>
               </p>
             </div>
           </div>
@@ -53,7 +39,7 @@
                 <div class="card">
                     <img src="assets/bg.jpg" class="card-img-top" alt="...">
                     <div class="card-body">
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <p class="card-text">Название проекта</p>
                       <a href="#" class="btn btn-outline-info">Подробнее</a>
                     </div>
                   </div>
@@ -67,9 +53,9 @@
       <footer class="text-body-secondary py-5">
         <div class="container">
           <p class="float-end mb-1">
-            <a href="#">Back to top</a>
+            <a href="#">Наверх</a>
           </p>
-          <p class="mb-1">Contacts</p>
+          <p class="mb-1">Контакты</p>
           <p class="mb-0"><a href="https://t.me/AntonGoff">Telegram</a> & <a href="https://github.com/XATAB1CH">Github</a></p>
         </div>
       </footer>

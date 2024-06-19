@@ -1,47 +1,45 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	username string
-	loggedIn bool
-}
+// func loginHandler(c *gin.Context) {
+// 	// логика ввода пароля
+// 	logWord := "Авторизация успешна"
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	// логика ввода пароля
-	logWord := "Авторизация успешна"
-	fmt.Fprint(w, logWord)
-}
+// 	username := c.PostForm("username")
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	data := User{
-		username: "admin",
-		loggedIn: false,
-	}
+// 	c.HTML(http.StatusOK, "index.html", map[string]string{"title": logWord, "description": fmt.Sprintf("Добро пожаловать %s", username)})
+// }
 
-	tmpl, _ := template.ParseFiles("templates/index.html")
-	tmpl.Execute(w, data)
-}
-
-func main() {
+func main() { // все мтеоды get post
 
 	router := gin.Default()
+
+	router.SetTrustedProxies(nil)
+
 	router.LoadHTMLGlob("templates/*")
 	router.Static("assets", "./assets")
+	router.Static("styles",  "./assets/styles")
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", map[string]string{"title": "Главная страница", "description": "Некая информация"})
 	})
 
-	router.GET("/login", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "login.html", map[string]string{"title": "Страница входа", "description": "Некая информация"})
+	router.GET("/signup", func(c  *gin.Context)  {
+		c.HTML(http.StatusOK, "signup.html", nil)
 	})
+
+	router.GET("/signin", func(c  *gin.Context)  {
+		c.HTML(http.StatusOK, "signin.html", nil)
+	})
+
+	// router.POST("/submit", func(c *gin.Context) {
+	// 	c.HTML(http.StatusOK, "index.html", map[string]string{"title": "Главная страница", "description": "Некая информация"})
+	// })
 
 	router.Run(":8080")
 }
