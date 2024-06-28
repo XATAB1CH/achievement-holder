@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Achievment-holder</title>
+    <title>Achievement-holder</title>
     <link rel="stylesheet" href="styles/bootstrap.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
                 </a>
               </div>
               <div class="m-5">
-                <a href="http://127.0.0.1:8080/signin" class="btn btn-success">Войти</a>
+                <a href="http://127.0.0.1:8080/logining" class="btn btn-success">Войти</a>
               </div>
         </div>
       </header>
@@ -23,8 +23,8 @@
         <section class="py-5 text-center container">
           <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-              <h1 class="fw-light">{{.title}}</h1>
-              <p class="lead text-body-secondary">{{.description}}</p>
+              <h1 class="fw-light">Главная страница</h1>
+              <p class="lead text-body-secondary">Описание главной страницы</p>
               <p>
                 <a href="#" class="btn btn-outline-primary">Github проекты</a>
                 <a href="#" class="btn btn-outline-primary">Университетские мероприятия</a>
@@ -35,15 +35,17 @@
         <div class="album py-5 bg-body-tertiary">
           <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
+              {{range .Achievements}}
                 <div class="col">
-                <div class="card">
-                    <img src="assets/bg.jpg" class="card-img-top" alt="...">
+                  <div class="card">
+                    <img src={{.Img}} class="card-img-top" alt="...">
                     <div class="card-body">
-                      <p class="card-text">Название проекта</p>
-                      <a href="#" class="btn btn-outline-info">Подробнее</a>
+                      <p class="card-text">{{.Title}}</p>
+                      <a href={{.Link}} class="btn btn-outline-info">Подробнее</a>
                     </div>
                   </div>
-              </div>
+                </div>
+              {{end}}
             </div>
           </div>
         </div>

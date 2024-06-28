@@ -1,19 +1,14 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+	"os"
 
+	"github.com/XATAB1CH/achievement-holder/models"
+	"github.com/XATAB1CH/achievement-holder/routes"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
-
-// func loginHandler(c *gin.Context) {
-// 	// логика ввода пароля
-// 	logWord := "Авторизация успешна"
-
-// 	username := c.PostForm("username")
-
-// 	c.HTML(http.StatusOK, "index.html", map[string]string{"title": logWord, "description": fmt.Sprintf("Добро пожаловать %s", username)})
-// }
 
 func main() { // все мтеоды get post
 
@@ -23,23 +18,30 @@ func main() { // все мтеоды get post
 
 	router.LoadHTMLGlob("templates/*")
 	router.Static("assets", "./assets")
-	router.Static("styles",  "./assets/styles")
+	router.Static("styles", "./assets/styles")
 
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", map[string]string{"title": "Главная страница", "description": "Некая информация"})
-	})
+	testUser := models.CreateTestUser("admin", "admin")
 
-	router.GET("/signup", func(c  *gin.Context)  {
-		c.HTML(http.StatusOK, "signup.html", nil)
-	})
+	err := godotenv.Load("config.env")
+	if err != nil {
+		fmt.Println("Error loading.env file")
+	}
 
-	router.GET("/signin", func(c  *gin.Context)  {
-		c.HTML(http.StatusOK, "signin.html", nil)
-	})
+	config := models.Config{
+		Host:     os.Getenv("DB_HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   os.Getenv("DB_NAME"),
+		SSLMode:  os.Getenv("DB_SSLMODE"),
+	}
 
-	// router.POST("/submit", func(c *gin.Context) {
-	// 	c.HTML(http.StatusOK, "index.html", map[string]string{"title": "Главная страница", "description": "Некая информация"})
-	// })
+	// Подключаем БД
+	models.InitDB(config)
+
+	// Подключаем маршруты
+	routes.IndexRoutes(router, testUser)
+	routes.AuthRoutes(router)
 
 	router.Run(":8080")
 }
