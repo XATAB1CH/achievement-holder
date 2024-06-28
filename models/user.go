@@ -2,43 +2,38 @@ package models
 
 var TestUser User
 
-type Achievement struct {
-	Id    uint
-	Img   string
-	Title string
-	Link  string
-}
-
 type User struct {
-	ID           uint
-	Name         string
-	Email        string
-	Password     string
-	GitURL       string
+	ID       uint
+	Name     string
+	Email    string
+	Password string
+	GitURL   string
 	Role         string
 	Achievements []Achievement
 }
 
 func CreateTestUser(username string, password string) *User {
-	achievments := []Achievement{
+	testAchievments := []Achievement{
 		{
 			1,
-			"assets/img1.png",
 			"Тянка",
+			"assets/img1.png",
 			"https://google.com",
+			1,
 		},
 		{
 			2,
-			"assets/img1.png",
 			"Тоже тянка",
+			"assets/img1.png",
 			"https://google.com",
+			1,
 		},
 	}
 
 	return &User{
 		Name:         username,
 		Password:     password,
-		Achievements: achievments,
+		Achievements: testAchievments,
 	}
 }
 
