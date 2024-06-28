@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/XATAB1CH/achievement-holder/models"
 	"github.com/XATAB1CH/achievement-holder/routes"
@@ -27,17 +26,16 @@ func main() { // все мтеоды get post
 		fmt.Println("Error loading.env file")
 	}
 
-	config := models.Config{
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		User:     os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		DBName:   os.Getenv("DB_NAME"),
-		SSLMode:  os.Getenv("DB_SSLMODE"),
-	}
+	// config := models.Config{
+	// 	Host:     os.Getenv("DB_HOST"),
+	// 	Port:     os.Getenv("DB_PORT"),
+	// 	User:     os.Getenv("DB_USER"),
+	// 	Password: os.Getenv("DB_PASSWORD"),
+	// 	DBName:   os.Getenv("DB_NAME"),
+	// 	SSLMode:  os.Getenv("DB_SSLMODE"),
+	// }
 
 	// Подключаем БД
-	models.InitDB(config)
 
 	// Подключаем маршруты
 	routes.IndexRoutes(router, testUser)

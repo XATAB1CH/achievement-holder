@@ -3,27 +3,27 @@ package models
 var TestUser User
 
 type Achievement struct {
-	Id    uint   `gorm:"primaryKey" json: "id"`
-	Img   string // ссылка на изображение
-	Title string // название
-	Link  string // ссылка на страницу достижения
+	Id    uint
+	Img   string
+	Title string
+	Link  string
 }
 
 type User struct {
-	ID           uint          `gorm:"primaryKey" json: "id"`
-	Name         string        `json: "name"`
-	Email        string        `gorm: "unique" json: "email"`
-	Password     string        `json: "password"`
-	GitURL       string        `json: "giturl"`
-	Role         string        `json: "role"`
-	Achievements []Achievement `gorm:"many2many:user_achievements" json: "achievements"`
+	ID           uint
+	Name         string
+	Email        string
+	Password     string
+	GitURL       string
+	Role         string
+	Achievements []Achievement
 }
 
 func CreateTestUser(username string, password string) *User {
 	achievments := []Achievement{
 		{
 			1,
-			"assets/img1.png", // ссылка на изображение из интернета
+			"assets/img1.png",
 			"Тянка",
 			"https://google.com",
 		},
