@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/XATAB1CH/achievement-holder/models"
+	"github.com/XATAB1CH/achievement-holder/config"
 	"github.com/XATAB1CH/achievement-holder/utils"
 	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -19,7 +19,7 @@ type Client interface {
 	Begin(ctx context.Context) (pgx.Tx, error)
 }
 
-func NewClient(ctx context.Context, maxAttempts int, config models.Config) (pool *pgxpool.Pool, err error) {
+func NewClient(ctx context.Context, maxAttempts int, config config.Config) (pool *pgxpool.Pool, err error) {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
 
 	err = utils.DoWithTries(func() error {
@@ -38,5 +38,5 @@ func NewClient(ctx context.Context, maxAttempts int, config models.Config) (pool
 		fmt.Println("Failed to connect to PostgreSQL")
 	}
 
-	return 
+	return
 }

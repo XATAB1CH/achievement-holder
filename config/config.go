@@ -4,18 +4,26 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/XATAB1CH/achievement-holder/models"
 	"github.com/joho/godotenv"
 )
 
-func GetConfig() (config models.Config) {
+type Config struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+func GetConfig() (config Config) {
 
 	err := godotenv.Load("config.env")
 	if err != nil {
 		fmt.Println("Error loading.env file")
 	}
 
-	config = models.Config{
+	config = Config{
 		Host:     os.Getenv("DB_HOST"),
 		Port:     os.Getenv("DB_PORT"),
 		User:     os.Getenv("DB_USER"),
