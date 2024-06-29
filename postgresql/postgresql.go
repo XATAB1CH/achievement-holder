@@ -20,7 +20,7 @@ type Client interface {
 }
 
 func NewClient(ctx context.Context, maxAttempts int, config config.Config) (pool *pgxpool.Pool, err error) {
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
+	dsn := fmt.Sprintf("host=%s port=%s author=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.Author, config.Password, config.DBName, config.SSLMode)
 
 	err = utils.DoWithTries(func() error {
 		ctx, cancel := context.WithTimeout(ctx, 5*time.Second)

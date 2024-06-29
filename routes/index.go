@@ -2,14 +2,14 @@ package routes
 
 import (
 	"net/http"
-	"os/user"
 
+	author "github.com/XATAB1CH/achievement-holder/models/author"
 	"github.com/gin-gonic/gin"
 )
 
-func IndexRoutes(router *gin.Engine, user *user.User) {
+func IndexRoutes(router *gin.Engine, author *author.Author) {
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", user)
+		c.HTML(http.StatusOK, "index.html", author)
 	})
 
 	router.GET("/registration", func(c *gin.Context) {

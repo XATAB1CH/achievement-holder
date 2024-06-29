@@ -5,12 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func IsAuthorized() gin.HandlerFunc {
+func IsUserized() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("token")
 
 		if err != nil {
-			c.JSON(401, gin.H{"error": "unauthorized"})
+			c.JSON(401, gin.H{"error": "unUserized"})
 			c.Abort()
 			return
 		}
@@ -18,7 +18,7 @@ func IsAuthorized() gin.HandlerFunc {
 		claims, err := utils.ParseToken(cookie)
 
 		if err != nil {
-			c.JSON(401, gin.H{"error": "unauthorized"})
+			c.JSON(401, gin.H{"error": "unUserized"})
 			c.Abort()
 			return
 		}
