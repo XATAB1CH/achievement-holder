@@ -3,13 +3,12 @@ package routes
 import (
 	"net/http"
 
-	author "github.com/XATAB1CH/achievement-holder/models/author"
 	"github.com/gin-gonic/gin"
 )
 
-func IndexRoutes(router *gin.Engine, author *author.Author) {
+func IndexRoutes(router *gin.Engine) {
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", author)
+		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
 	router.GET("/registration", func(c *gin.Context) {

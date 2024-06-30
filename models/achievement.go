@@ -1,4 +1,4 @@
-package achievement
+package models
 
 type Achievement struct {
 	ID     uint   `json: "id"`

@@ -1,36 +1,21 @@
 package config
 
-import (
-	"fmt"
-	"os"
-
-	"github.com/joho/godotenv"
-)
-
 type Config struct {
 	Host     string
 	Port     string
-	Author   string
+	User     string
 	Password string
 	DBName   string
 	SSLMode  string
 }
 
-func GetConfig() (config Config) {
-
-	err := godotenv.Load("config.env")
-	if err != nil {
-		fmt.Println("Error loading.env file")
+func GetConfig() Config {
+	return Config{
+		Host:     "127.0.0.1",
+		Port:     "5432",
+		User:     "postgres",
+		Password: "anton132",
+		DBName:   "achievement-holder",
+		SSLMode:  "disable",
 	}
-
-	config = Config{
-		Host:     os.Getenv("DB_HOST"),
-		Port:     os.Getenv("DB_PORT"),
-		Author:   os.Getenv("DB_USER"),
-		Password: os.Getenv("DB_PASSWORD"),
-		DBName:   os.Getenv("DB_NAME"),
-		SSLMode:  os.Getenv("DB_SSLMODE"),
-	}
-
-	return
 }

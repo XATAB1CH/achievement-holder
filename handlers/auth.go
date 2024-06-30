@@ -6,8 +6,8 @@ import (
 
 // var (
 // 	jwtKey       = []byte("golden_horse")
-// 	author         models.Author
-// 	existingUser models.Author
+// 	user         models.User
+// 	existingUser models.User
 // 	errHash      error
 // )
 
@@ -23,25 +23,25 @@ func Signup(c *gin.Context) {
 	// 	return
 	// }
 
-	// author := models.Author{
+	// user := models.User{
 	// 	Name:     name,
 	// 	Email:    email,
 	// 	Password: password,
 	// }
 
-	// if err := c.ShouldBindJSON(&author); err != nil {
+	// if err := c.ShouldBindJSON(&user); err != nil {
 	// 	c.JSON(400, gin.H{"error": "shouldBindJSON"})
 	// 	return
 	// }
 
-	// models.DB.Where("email = ?", author.Email).First(&existingUser)
+	// models.DB.Where("email = ?", user.Email).First(&existingUser)
 
 	// if existingUser.ID != 0 {
-	// 	c.JSON(400, gin.H{"error": "author already exists"})
+	// 	c.JSON(400, gin.H{"error": "user already exists"})
 	// 	return
 	// }
 
-	// author.Password, errHash = utils.GenerateHashPassword(author.Password)
+	// user.Password, errHash = utils.GenerateHashPassword(user.Password)
 
 	// if errHash != nil {
 	// 	c.JSON(500, gin.H{"error": "could not generate password hash"})
@@ -58,19 +58,19 @@ func Login(c *gin.Context) { // проверяем существует ли п�
 	name := c.PostForm("name")
 	password := c.PostForm("password")
 
-	// author := models.Author{
+	// user := models.User{
 	// 	Name:     name,
 	// 	Password: password,
 	// }
 
-	// if err := c.ShouldBindJSON(&author); err != nil {
+	// if err := c.ShouldBindJSON(&user); err != nil {
 	// 	c.JSON(400, gin.H{"error": err.Error()})
 	// 	return
 	// }
 
 	// проверяем существование пользователя
 
-	// errHash := utils.CompareHashPassword(author.Password, existingUser.Password)
+	// errHash := utils.CompareHashPassword(user.Password, existingUser.Password)
 
 	// if !errHash {
 	// 	c.JSON(400, gin.H{"error": "invalid password"})
@@ -99,8 +99,8 @@ func Login(c *gin.Context) { // проверяем существует ли п�
 	// c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "localhost", false, true)
 	// c.JSON(200, gin.H{
 	// 	"status":   "ok",
-	// 	"username": author.Name,
-	// 	"password": author.Password,
+	// 	"username": user.Name,
+	// 	"password": user.Password,
 	// })
 
 	c.JSON(200, gin.H{"name": name, "password": password})
@@ -122,7 +122,7 @@ func Login(c *gin.Context) { // проверяем существует ли п�
 // 		return
 // 	}
 
-// 	if claims.Role != "author" && claims.Role != "admin" {
+// 	if claims.Role != "user" && claims.Role != "admin" {
 // 		c.JSON(401, gin.H{"error": "unUserized"})
 // 		return
 // 	}
@@ -156,5 +156,5 @@ func Login(c *gin.Context) { // проверяем существует ли п�
 
 // func Logout(c *gin.Context) {
 // 	c.SetCookie("token", "", -1, "/", "localhost", false, true)
-// 	c.JSON(200, gin.H{"success": "author logged out"})
+// 	c.JSON(200, gin.H{"success": "user logged out"})
 // }
