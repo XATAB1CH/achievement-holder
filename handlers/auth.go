@@ -1,7 +1,12 @@
 package handlers
 
 import (
+	"context"
+
+	"github.com/XATAB1CH/achievement-holder/postgresql"
+	"github.com/XATAB1CH/achievement-holder/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5"
 )
 
 // var (
@@ -12,22 +17,29 @@ import (
 // )
 
 func Signup(c *gin.Context) {
+	var errHash error
+	conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+	}
 
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 	confirmPassword := c.PostForm("confirm-password")
 
-	// if password != confirmPassword {
-	// 	c.JSON(400, gin.H{"error": "passwords are not equal"})
-	// 	return
-	// }
+	if password != confirmPassword {
+		c.JSON(400, gin.H{"error": "passwords are not equal"})
+		return
+	}
 
-	// user := models.User{
-	// 	Name:     name,
-	// 	Email:    email,
-	// 	Password: password,
-	// }
+	password, errHash = utils.GenerateHashPassword(password)
+	if errHash != nil {
+		c.JSON(500, gin.H{"error": "could not generate password hash"})
+		return
+	}
+
+	id := postgresql.InsertUser(conn, name, email, password)
 
 	// if err := c.ShouldBindJSON(&user); err != nil {
 	// 	c.JSON(400, gin.H{"error": "shouldBindJSON"})
@@ -41,16 +53,9 @@ func Signup(c *gin.Context) {
 	// 	return
 	// }
 
-	// user.Password, errHash = utils.GenerateHashPassword(user.Password)
-
-	// if errHash != nil {
-	// 	c.JSON(500, gin.H{"error": "could not generate password hash"})
-	// 	return
-	// }
-
 	// добавляем пользоваетеля в базу данных
 
-	c.JSON(200, gin.H{"name": name, "password": password, "confirmPassword": confirmPassword, "email": email})
+	c.JSON(200, gin.H{"id": id, "name": name, "password": password, "confirmPassword": confirmPassword, "email": email})
 }
 
 func Login(c *gin.Context) { // проверяем существует ли пользователь в базе данных
