@@ -21,7 +21,6 @@ func CompareHashPassword(password, hash string) bool {
 }
 
 func GenerateJWTToken(claims models.Claims) (string, error) {
-	// Используйте алгоритм HMAC SHA256 для подписи токена
 	signKey := jwtKey
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(signKey)

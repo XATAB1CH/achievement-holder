@@ -15,7 +15,6 @@ func GetDSN() string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
 }
 
-// Добавление пользователя в базу данных, если такого пользователя нет
 func InsertUser(conn *pgx.Conn, name, email, password string) (id int) {
 	err := conn.QueryRow(context.Background(), `INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING RETURNING id `, name, email, password).Scan(&id)
 
@@ -44,5 +43,4 @@ func GetUserByName(conn *pgx.Conn, name string) (user models.User, err error) {
 	}
 
 	return user, nil
-
 }
