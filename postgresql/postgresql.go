@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/XATAB1CH/achievement-holder/config"
+	"github.com/XATAB1CH/achievement-holder/models"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -14,10 +15,13 @@ func GetDSN() string {
 	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode)
 }
 
-// Добавление пользователя в базу данных
-func InsertUser(conn *pgx.Conn, name, email, password string) int {
-	var id int
-	err := conn.QueryRow(context.Background(), `INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) RETURNING id`, name, email, password).Scan(&id)
+// Добавление пользователя в базу данных, если такого пользователя нет
+func InsertUser(conn *pgx.Conn, name, email, password string) (id int) {
+	err := conn.QueryRow(context.Background(), `INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING RETURNING id `, name, email, password).Scan(&id)
+
+	if err == pgx.ErrNoRows {
+		return 0
+	}
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
@@ -25,4 +29,20 @@ func InsertUser(conn *pgx.Conn, name, email, password string) int {
 	}
 
 	return id
+}
+
+func GetUserByName(conn *pgx.Conn, name string) (user models.User, err error) {
+	err = conn.QueryRow(context.Background(), `SELECT id, name, email, password FROM "users" WHERE name = $1`, name).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	if err == pgx.ErrNoRows {
+		return user, err
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return user, nil
+
 }

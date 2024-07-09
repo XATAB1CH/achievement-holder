@@ -3,21 +3,18 @@ package handlers
 import (
 	"context"
 
+	"github.com/XATAB1CH/achievement-holder/models"
 	"github.com/XATAB1CH/achievement-holder/postgresql"
 	"github.com/XATAB1CH/achievement-holder/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
 )
 
-// var (
-// 	jwtKey       = []byte("golden_horse")
-// 	user         models.User
-// 	existingUser models.User
-// 	errHash      error
-// )
-
 func Signup(c *gin.Context) {
-	var errHash error
+	var (
+		errHash error
+	)
+
 	conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
@@ -41,125 +38,50 @@ func Signup(c *gin.Context) {
 
 	id := postgresql.InsertUser(conn, name, email, password)
 
-	// if err := c.ShouldBindJSON(&user); err != nil {
-	// 	c.JSON(400, gin.H{"error": "shouldBindJSON"})
-	// 	return
-	// }
+	if id == 0 {
+		c.JSON(500, gin.H{"error": "user is already created"})
+		return
+	}
 
-	// models.DB.Where("email = ?", user.Email).First(&existingUser)
-
-	// if existingUser.ID != 0 {
-	// 	c.JSON(400, gin.H{"error": "user already exists"})
-	// 	return
-	// }
-
-	// добавляем пользоваетеля в базу данных
-
-	c.JSON(200, gin.H{"id": id, "name": name, "password": password, "confirmPassword": confirmPassword, "email": email})
+	c.JSON(200, gin.H{"id": id, "name": name, "password": password, "email": email})
 }
 
-func Login(c *gin.Context) { // проверяем существует ли пользователь в базе данных
+func Login(c *gin.Context) {
 
 	name := c.PostForm("name")
 	password := c.PostForm("password")
 
-	// user := models.User{
-	// 	Name:     name,
-	// 	Password: password,
-	// }
+	conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+	}
 
-	// if err := c.ShouldBindJSON(&user); err != nil {
-	// 	c.JSON(400, gin.H{"error": err.Error()})
-	// 	return
-	// }
+	userDB, err := postgresql.GetUserByName(conn, name)
+	if err != nil {
+		c.JSON(401, gin.H{"error": "user not found"})
+		return
+	}
 
-	// проверяем существование пользователя
+	expectedPassword := userDB.Password
 
-	// errHash := utils.CompareHashPassword(user.Password, existingUser.Password)
+	if !utils.CompareHashPassword(password, expectedPassword) {
+		c.JSON(401, gin.H{"error": "wrong password"})
+		return
+	}
 
-	// if !errHash {
-	// 	c.JSON(400, gin.H{"error": "invalid password"})
-	// 	return
-	// }
+	// Create the JWT claims
+	claims := &models.Claims{
+		Name: userDB.Name,
+	}
 
-	// expirationTime := time.Now().Add(5 * time.Minute)
+	tokenString, err := utils.GenerateJWTToken(*claims)
+	if err != nil {
+		c.JSON(500, gin.H{"error": "could not generate token"})
+		return
+	}
 
-	// claims := &models.Claims{
-	// 	Role: existingUser.Role,
-	// 	StandardClaims: jwt.StandardClaims{
-	// 		Subject:   existingUser.Email,
-	// 		ExpiresAt: expirationTime.Unix(),
-	// 	},
-	// }
-
-	// token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	// tokenString, err := token.SignedString(jwtKey)
-
-	// if err != nil {
-	// 	c.JSON(500, gin.H{"error": "could not generate token"})
-	// 	return
-	// }
-
-	// c.SetCookie("token", tokenString, int(expirationTime.Unix()), "/", "localhost", false, true)
-	// c.JSON(200, gin.H{
-	// 	"status":   "ok",
-	// 	"username": user.Name,
-	// 	"password": user.Password,
-	// })
+	// Create the cookie
+	c.SetCookie("token", tokenString, 3600, "/", "127.0.0.1", false, true)
 
 	c.JSON(200, gin.H{"name": name, "password": password})
 }
-
-// func Home(c *gin.Context) {
-
-// 	cookie, err := c.Cookie("token")
-
-// 	if err != nil {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	claims, err := utils.ParseToken(cookie)
-
-// 	if err != nil {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	if claims.Role != "user" && claims.Role != "admin" {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	c.JSON(200, gin.H{"success": "home page", "role": claims.Role})
-// }
-
-// func Premium(c *gin.Context) {
-
-// 	cookie, err := c.Cookie("token")
-
-// 	if err != nil {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	claims, err := utils.ParseToken(cookie)
-
-// 	if err != nil {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	if claims.Role != "admin" {
-// 		c.JSON(401, gin.H{"error": "unUserized"})
-// 		return
-// 	}
-
-// 	c.JSON(200, gin.H{"success": "premium page", "role": claims.Role})
-// }
-
-// func Logout(c *gin.Context) {
-// 	c.SetCookie("token", "", -1, "/", "localhost", false, true)
-// 	c.JSON(200, gin.H{"success": "user logged out"})
-// }
