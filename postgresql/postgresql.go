@@ -16,6 +16,11 @@ func GetDSN() string {
 }
 
 func InsertUser(conn *pgx.Conn, name, email, password string) (id int) {
+
+	if name == "" || email == "" || password == "" {
+		return 0
+	}
+
 	err := conn.QueryRow(context.Background(), `INSERT INTO "users" (name, email, password) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING RETURNING id `, name, email, password).Scan(&id)
 
 	if err == pgx.ErrNoRows {

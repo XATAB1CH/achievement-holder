@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/XATAB1CH/achievement-holder/models"
 	"github.com/XATAB1CH/achievement-holder/postgresql"
@@ -43,7 +44,12 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{"id": id, "name": name, "password": password, "email": email})
+	claims := &models.Claims{
+		Name: name,
+	}
+
+	c.Set("claims", claims)
+	c.Redirect(http.StatusFound, "/")
 }
 
 func Login(c *gin.Context) {
@@ -53,19 +59,23 @@ func Login(c *gin.Context) {
 
 	conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
 	if err != nil {
-		c.JSON(500, gin.H{"error": err.Error()})
+		text := "Ошибка базы данных!"
+		c.HTML(http.StatusNotFound, "auth_error.html", text)
+		return
 	}
 
 	userDB, err := postgresql.GetUserByName(conn, name)
 	if err != nil {
-		c.JSON(401, gin.H{"error": "user not found"})
+		text := "Неверный логин или пароль!"
+		c.HTML(http.StatusNotFound, "auth_error.html", text)
 		return
 	}
 
 	expectedPassword := userDB.Password
 
 	if !utils.CompareHashPassword(password, expectedPassword) {
-		c.JSON(401, gin.H{"error": "wrong password"})
+		text := "Неверный логин или пароль!"
+		c.HTML(http.StatusNotFound, "auth_error.html", text)
 		return
 	}
 
@@ -76,12 +86,17 @@ func Login(c *gin.Context) {
 
 	tokenString, err := utils.GenerateJWTToken(*claims)
 	if err != nil {
-		c.JSON(500, gin.H{"error": "could not generate token"})
+		text := "Ошибка формирования куки!"
+		c.HTML(http.StatusNotFound, "auth_error.html", text)
 		return
 	}
 
 	// Create the cookie
 	c.SetCookie("token", tokenString, 3600, "/", "127.0.0.1", false, true)
+	c.Redirect(http.StatusFound, "/")
+}
 
-	c.JSON(200, gin.H{"name": name, "password": password})
+func Logout(c *gin.Context) {
+	c.SetCookie("token", "", -1, "/", "127.0.0.1", false, true)
+	c.Redirect(http.StatusFound, "/")
 }

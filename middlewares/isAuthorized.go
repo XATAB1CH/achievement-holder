@@ -16,8 +16,8 @@ var (
 func IsAuthorized() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Request.Cookie("token")
+
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"message": "cant scan token"})
 			return
 		}
 
@@ -34,11 +34,13 @@ func IsAuthorized() gin.HandlerFunc {
 			return
 		}
 
-		if claims, ok := token.Claims.(*models.Claims); ok && token.Valid {
-			fmt.Println(claims.Name)
-			c.Next()
+		claims, ok := token.Claims.(*models.Claims)
+		if ok && token.Valid {
+			c.Set("claims", claims)
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{"message": "token is not active"})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "token is wrong"})
+			return
 		}
+
 	}
 }

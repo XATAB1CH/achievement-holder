@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/XATAB1CH/achievement-holder/handlers"
 	"github.com/XATAB1CH/achievement-holder/postgresql"
+	"github.com/XATAB1CH/achievement-holder/routes"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	defer conn.Close(context.Background())
 
 	// Подключаем маршруты
-	router := handlers.InitRoutes()
+	router := routes.InitRoutes()
 
 	router.Run(":8080")
 

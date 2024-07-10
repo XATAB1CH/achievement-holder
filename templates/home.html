@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement-user</title>
+    <link rel="stylesheet" href="styles/bootstrap.css">
+</head>
+<body>
+    <header data-bs-theme="dark">
+        <div class="navbar navbar-dark bg-dark shadow-sm" style="height: auto;">
+              <div class="m-5">
+                <a class="navbar-brand d-flex align-items-center">
+                  <img src="assets/paper.svg" alt="icon" height="30" width="30" class="me-2">
+                  <strong>Достижения</strong>
+                </a>
+              </div>
+              <div class="m-5">
+                <a href="http://127.0.0.1:8080/auth/logout" class="btn btn-warning">Выйти</a>
+              </div>
+        </div>
+      </header>
+      <main>
+        <section class="py-5 text-center container">
+          <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <h1 class="fw-light">Привет, {{.Name}}</h1>
+              <p class="lead text-body-secondary">Описание главной страницы</p>
+              <p>
+                <a href="#" class="btn btn-outline-primary">Github проекты</a>
+                <a href="#" class="btn btn-outline-primary">Университетские мероприятия</a>
+              </p>
+            </div>
+          </div>
+        </section>
+        <div class="album py-5 bg-body-tertiary">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
+              {{range .Achievements}}
+                <div class="col">
+                  <div class="card">
+                    <img src={{.Image}} class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <p class="card-text">{{.Title}}</p>
+                      <a href={{.Info}} class="btn btn-outline-info">Подробнее</a>
+                    </div>
+                  </div>
+                </div>
+              {{end}}
+              <!-- Добавление достижения -->
+              <div class="col">
+                <div class="card">
+                  <a href="achievement/creation" class="navbar-brand d-flex align-items-center">
+                    <img src="assets/plus.svg" alt="icon" height="90" width="120" class="me-2">
+                    <strong style="font-size: x-large; color: #758CA3;">Добавить достижение</strong>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      </main>
+      
+      <footer class="text-body-secondary py-5">
+        <div class="container">
+          <p class="float-end mb-1">
+            <a href="#">Наверх</a>
+          </p>
+          <p class="mb-1">Контакты</p>
+          <p class="mb-0"><a href="https://t.me/AntonGoff">Telegram</a> & <a href="https://github.com/XATAB1CH">Github</a></p>
+        </div>
+      </footer>
+      
+</body>
+</html>
