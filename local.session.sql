@@ -1,1 +1,1 @@
-select * FROM public.users
+select * FROM public.achievements 

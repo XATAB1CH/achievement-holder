@@ -18,6 +18,12 @@ func InitRoutes() *gin.Engine {
 		auth.Static("assets", "./assets")
 		auth.Static("styles", "./assets/styles")
 
+		auth.GET("/registration", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "registration.html", nil)
+		})
+		auth.GET("/logining", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "logining.html", nil)
+		})
 		auth.POST("/login", handlers.Login)
 		auth.POST("/signup", handlers.Signup)
 		auth.GET("/logout", handlers.Logout)
@@ -37,13 +43,6 @@ func InitRoutes() *gin.Engine {
 
 			c.HTML(http.StatusOK, "index.html", nil)
 		})
-
-		unknown.GET("/registration", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "registration.html", nil)
-		})
-		unknown.GET("/logining", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "logining.html", nil)
-		})
 	}
 
 	achievement := router.Group("/achievement")
@@ -54,13 +53,7 @@ func InitRoutes() *gin.Engine {
 		achievement.GET("/creation", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "creation.html", nil)
 		})
-	}
-
-	logined := router.Group("/logined")
-	{
-		logined.Static("assets", "./assets")
-		logined.Static("styles", "./assets/styles")
-
+		achievement.POST("/create", mw.IsAuthorized(), handlers.Create)
 	}
 
 	return router

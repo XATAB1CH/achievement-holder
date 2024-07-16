@@ -19,11 +19,14 @@
                   <h2 class="card-title text-center">Новое достижение</h2>
                 <div class="card-body py-md-4">
             <form action="/achievement/create" method="post" enctype="multipart/form-data">
-              <input type="text" class="form-control" name="title" placeholder="Название" required>
-              <input type="text" class="form-control" name="info" placeholder="Описание" required>
+              <input type="text" class="form-control" name="title" placeholder="Название">
+              <input type="text" class="form-control" name="info" placeholder="Описание">
               <input type="file" name="file" />
-              <button type="submit" class="btn btn-primary">Опубликовать</button>
+              <button type="submit" class="btn btn-primary">Создать</button>
             </form>
+    </div>
+    <div class="alert alert-danger" role="alert">
+        {{.}}
     </div>
 </body>
 </html>

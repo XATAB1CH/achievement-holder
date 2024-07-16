@@ -1,12 +1,15 @@
 package middlewares
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/XATAB1CH/achievement-holder/models"
+	"github.com/XATAB1CH/achievement-holder/postgresql"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -15,6 +18,11 @@ var (
 
 func IsAuthorized() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
+
 		cookie, err := c.Request.Cookie("token")
 
 		if err != nil {
@@ -36,6 +44,10 @@ func IsAuthorized() gin.HandlerFunc {
 
 		claims, ok := token.Claims.(*models.Claims)
 		if ok && token.Valid {
+			claims.Achievements, err = postgresql.GetAchievementsByID(conn, claims.UserID)
+			if err != nil {
+				c.JSON(500, gin.H{"error": err.Error()})
+			}
 			c.Set("claims", claims)
 		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "token is wrong"})

@@ -45,10 +45,18 @@ func Signup(c *gin.Context) {
 	}
 
 	claims := &models.Claims{
-		Name: name,
+		UserID: id,
+		Name:   name,
 	}
 
-	c.Set("claims", claims)
+	tokenString, err := utils.GenerateJWTToken(*claims)
+	if err != nil {
+		text := "Ошибка формирования куки!"
+		c.HTML(http.StatusNotFound, "auth_error.html", text)
+		return
+	}
+
+	c.SetCookie("token", tokenString, 3600, "/", "127.0.0.1", false, true)
 	c.Redirect(http.StatusFound, "/")
 }
 
@@ -79,9 +87,9 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Create the JWT claims
 	claims := &models.Claims{
-		Name: userDB.Name,
+		UserID: userDB.ID,
+		Name:   userDB.Name,
 	}
 
 	tokenString, err := utils.GenerateJWTToken(*claims)
@@ -91,7 +99,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Create the cookie
 	c.SetCookie("token", tokenString, 3600, "/", "127.0.0.1", false, true)
 	c.Redirect(http.StatusFound, "/")
 }

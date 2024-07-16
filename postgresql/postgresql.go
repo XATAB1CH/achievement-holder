@@ -49,3 +49,47 @@ func GetUserByName(conn *pgx.Conn, name string) (user models.User, err error) {
 
 	return user, nil
 }
+
+func InsertAchievement(conn *pgx.Conn, title, image, info string, userID int) (id int) {
+	if title == "" || image == "" || info == "" {
+		return 0
+	}
+
+	err := conn.QueryRow(context.Background(), `INSERT INTO "achievements" (title, image, info, user_id) VALUES ($1, $2, $3, $4) ON CONFLICT (title) DO NOTHING RETURNING id `, title, image, info, userID).Scan(&id)
+
+	if err == pgx.ErrNoRows {
+		return 0
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return id
+
+}
+
+func GetAchievementsByID(conn *pgx.Conn, userID int) ([]models.Achievement, error) {
+	var achievements []models.Achievement
+
+	rows, err := conn.Query(context.Background(), `SELECT id, title, image, info, user_id FROM "achievements" WHERE user_id = $1`, userID)
+
+	if err == pgx.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var achievement models.Achievement
+		err = rows.Scan(&achievement.ID, &achievement.Title, &achievement.Image, &achievement.Info, &achievement.UserID)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+			os.Exit(1)
+		}
+
+		achievements = append(achievements, achievement)
+	}
+
+	return achievements, nil
+}
