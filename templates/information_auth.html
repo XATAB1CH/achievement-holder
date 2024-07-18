@@ -34,11 +34,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                   </div>
                   <div class="modal-body">
-                    Вы уверены, что хотите удалить достижение {{.Title}}
+                    Вы уверены, что хотите удалить достижение {{.Title}}?
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
-                    <button type="button" class="btn btn-danger">Удалить</button>
+                    <a href="http://127.0.0.1:8080/achievement/{{.ID}}/delete" type="button" class="btn btn-danger"> Удалить</a>
                   </div>
                 </div>
               </div>

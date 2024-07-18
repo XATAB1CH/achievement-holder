@@ -96,3 +96,19 @@ func Search(c *gin.Context) {
 
 	c.Redirect(http.StatusFound, "/:"+userID)
 }
+
+func Delete(c *gin.Context) {
+	conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+	}
+
+	id, err := strconv.Atoi(c.Param("id")) // Получаем id достижения
+	if err != nil {
+		c.JSON(500, gin.H{"error": err.Error()})
+	}
+
+	_ = postgresql.DeleteAchievement(conn, id)
+
+	c.Redirect(http.StatusFound, "/")
+}

@@ -54,6 +54,7 @@ func InitRoutes() *gin.Engine {
 		achievement.GET("/creation", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "creation.html", nil)
 		})
+		achievement.GET("/:id/delete", handlers.Delete)
 		achievement.POST("/create", mw.IsAuthorized(), handlers.Create)
 	}
 

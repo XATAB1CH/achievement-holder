@@ -125,3 +125,14 @@ func GetAchievementByID(conn *pgx.Conn, id int) (models.Achievement, error) {
 
 	return achievement, nil
 }
+
+func DeleteAchievement(conn *pgx.Conn, id int) error {
+	_, err := conn.Exec(context.Background(), `DELETE FROM "achievements" WHERE id = $1`, id)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return nil
+}

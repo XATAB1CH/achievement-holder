@@ -1,1 +1,1 @@
-SELECT id, title, image, info, user_id FROM "achievements" WHERE user_id = 29
+SELECT * FROM public.achievements;
