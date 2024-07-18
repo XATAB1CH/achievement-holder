@@ -20,7 +20,7 @@
         </div>
       </header>
       <main>
-        <section class="py-5 text-center container">
+        <section class="py-5 text-center container ">
           <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
               <h1 class="fw-light">Достижения {{.Name}}</h1>
@@ -36,25 +36,12 @@
               </form>
             </div>
           </div>
+          <div class="alert alert-danger " role="alert">
+            "Пользователь не найден!"
+         </div>
         </section>
         <div class="album py-5 bg-body-tertiary">
-          <div class="container">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
-              {{range .Achievements}}
-                <div class="col">
-                  <div class="card">
-                    <img src={{.Image}} class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <p class="card-text">{{.Title}}</p>
-                      <a href="achievement/{{.ID}}" class="btn btn-primary">Подробнее</a>
-                    </div>
-                  </div>
-                </div>
-              {{end}}
-            </div>
-          </div>
         </div>
-      
       </main>
       
       <footer class="text-body-secondary py-5">

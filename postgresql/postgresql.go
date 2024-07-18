@@ -50,6 +50,21 @@ func GetUserByName(conn *pgx.Conn, name string) (user models.User, err error) {
 	return user, nil
 }
 
+func GetUserByID(conn *pgx.Conn, id int) (user models.User, err error) {
+	err = conn.QueryRow(context.Background(), `SELECT id, name, email, password FROM "users" WHERE id = $1`, id).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	if err == pgx.ErrNoRows {
+		return user, err
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return user, nil
+}
+
 func InsertAchievement(conn *pgx.Conn, title, image, info string, userID int) (id int) {
 	if title == "" || image == "" || info == "" {
 		return 0
@@ -70,7 +85,7 @@ func InsertAchievement(conn *pgx.Conn, title, image, info string, userID int) (i
 
 }
 
-func GetAchievementsByID(conn *pgx.Conn, userID int) ([]models.Achievement, error) {
+func GetAchievementsByUserID(conn *pgx.Conn, userID int) ([]models.Achievement, error) {
 	var achievements []models.Achievement
 
 	rows, err := conn.Query(context.Background(), `SELECT id, title, image, info, user_id FROM "achievements" WHERE user_id = $1`, userID)
@@ -92,4 +107,21 @@ func GetAchievementsByID(conn *pgx.Conn, userID int) ([]models.Achievement, erro
 	}
 
 	return achievements, nil
+}
+
+func GetAchievementByID(conn *pgx.Conn, id int) (models.Achievement, error) {
+	var achievement models.Achievement
+
+	err := conn.QueryRow(context.Background(), `SELECT id, title, image, info, user_id FROM "achievements" WHERE id = $1`, id).Scan(&achievement.ID, &achievement.Title, &achievement.Image, &achievement.Info, &achievement.UserID)
+
+	if err == pgx.ErrNoRows {
+		return achievement, err
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return achievement, nil
 }

@@ -12,11 +12,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	jwtKey = []byte("secret")
-)
-
-func IsAuthorized() gin.HandlerFunc {
+func CheckAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
 		if err != nil {
@@ -26,6 +22,7 @@ func IsAuthorized() gin.HandlerFunc {
 		cookie, err := c.Request.Cookie("token")
 
 		if err != nil {
+			c.Set("auth", "false")
 			return
 		}
 
@@ -48,9 +45,9 @@ func IsAuthorized() gin.HandlerFunc {
 			if err != nil {
 				c.JSON(500, gin.H{"error": err.Error()})
 			}
-			c.Set("claims", claims)
+			c.Set("auth", "true")
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{"message": "token is wrong"})
+			c.Set("auth", "false")
 			return
 		}
 

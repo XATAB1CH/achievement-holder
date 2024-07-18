@@ -29,12 +29,12 @@ func InitRoutes() *gin.Engine {
 		auth.GET("/logout", handlers.Logout)
 	}
 
-	unknown := router.Group("/")
+	api := router.Group("/")
 	{
-		unknown.Static("assets", "./assets")
-		unknown.Static("styles", "./assets/styles")
+		api.Static("assets", "./assets")
+		api.Static("styles", "./assets/styles")
 
-		unknown.GET("/", mw.IsAuthorized(), func(c *gin.Context) {
+		api.GET("/", mw.IsAuthorized(), func(c *gin.Context) {
 			claims, _ := c.Get("claims")
 			if claims != nil {
 				c.HTML(http.StatusOK, "home.html", claims)
@@ -50,10 +50,20 @@ func InitRoutes() *gin.Engine {
 		achievement.Static("assets", "./assets")
 		achievement.Static("styles", "./assets/styles")
 
+		achievement.GET("/:id", mw.CheckAuth(), handlers.Information)
 		achievement.GET("/creation", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "creation.html", nil)
 		})
 		achievement.POST("/create", mw.IsAuthorized(), handlers.Create)
+	}
+
+	demo := router.Group("/demo")
+	{
+		demo.Static("assets", "./assets")
+		demo.Static("styles", "./assets/styles")
+
+		api.POST("/search", handlers.Search)
+		api.GET("/:id", handlers.Demo)
 	}
 
 	return router
