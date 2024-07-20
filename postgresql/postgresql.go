@@ -136,3 +136,46 @@ func DeleteAchievement(conn *pgx.Conn, id int) error {
 
 	return nil
 }
+
+func InsertFeedback(conn *pgx.Conn, name, text string) (id int) {
+	if text == "" {
+		return 0
+	}
+
+	err := conn.QueryRow(context.Background(), `INSERT INTO "feedbacks" (name, text) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING RETURNING id `, name, text).Scan(&id)
+
+	if err == pgx.ErrNoRows {
+		return 0
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	return id
+}
+
+func GetFeedbacks(conn *pgx.Conn) ([]models.Feedback, error) {
+	var feedbacks []models.Feedback
+
+	rows, err := conn.Query(context.Background(), `SELECT name, text FROM "feedbacks"`)
+
+	if err == pgx.ErrNoRows {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var feedback models.Feedback
+		err = rows.Scan(&feedback.Name, &feedback.Text)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+			os.Exit(1)
+		}
+
+		feedbacks = append(feedbacks, feedback)
+	}
+
+	return feedbacks, nil
+}

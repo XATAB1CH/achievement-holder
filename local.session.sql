@@ -1,1 +1,1 @@
-SELECT * FROM public.achievements;
+SELECT * FROM "feedbacks"

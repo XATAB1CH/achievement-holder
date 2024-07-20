@@ -1,11 +1,15 @@
 package routes
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/XATAB1CH/achievement-holder/handlers"
 	mw "github.com/XATAB1CH/achievement-holder/middlewares"
+	"github.com/XATAB1CH/achievement-holder/models"
+	"github.com/XATAB1CH/achievement-holder/postgresql"
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5"
 )
 
 func InitRoutes() *gin.Engine {
@@ -41,8 +45,21 @@ func InitRoutes() *gin.Engine {
 				return
 			}
 
-			c.HTML(http.StatusOK, "index.html", nil)
+			conn, err := pgx.Connect(context.Background(), postgresql.GetDSN())
+			if err != nil {
+				c.HTML(http.StatusNotFound, "search_error", nil)
+			}
+			feedbacks, _ := postgresql.GetFeedbacks(conn)
+			claims = models.Claims{
+				Feedbacks: feedbacks,
+			}
+
+			c.HTML(http.StatusOK, "index.html", claims)
 		})
+		api.GET("/feedback", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "feedback.html", nil)
+		})
+		api.POST("/feedback_form", handlers.FeedbackForm)
 	}
 
 	achievement := router.Group("/achievement")

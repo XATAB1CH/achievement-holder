@@ -43,7 +43,7 @@
               {{range .Achievements}}
                 <div class="col">
                   <div class="card">
-                    <img src={{.Image}} class="card-img-top" alt="...">
+                    <img src={{.Image}} class="card-img-top">
                     <div class="card-body">
                       <p class="card-text">{{.Title}}</p>
                       <a href="achievement/{{.ID}}" class="btn btn-primary">Подробнее</a>
@@ -52,20 +52,50 @@
                 </div>
               {{end}}
             </div>
-          </div>
-        </div>
-      
+          </div> 
       </main>
       
       <footer class="text-body-secondary py-5">
         <div class="container">
           <p class="float-end mb-1">
-            <a href="#">Наверх</a>
+            <a href="/feedback">Обратная связь</a>
           </p>
           <p class="mb-1">Контакты</p>
           <p class="mb-0"><a href="https://t.me/AntonGoff">Telegram</a> & <a href="https://github.com/XATAB1CH">Github</a></p>
         </div>
       </footer>
+
+      <div id="carouselExampleControls" class="carousel slide py-5 bg-body-tertiary" style="padding-left: 35%;" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="card" style="width: 500;">
+              <div class="card-body">
+                <h5 class="card-title">Имя</h5>
+                <p class="card-text">Какой-то отзыв</p>
+              </div>
+            </div>
+          </div>
+          {{range .Feedbacks}}
+            <div class="carousel-item">
+              <div class="card" style="width: 500;">
+                <div class="card-body">
+                  <h5 class="card-title">{{.Name}}</h5>
+                  <p class="card-text">{{.Text}}</p>
+                </div>
+              </div>
+            </div>
+          {{end}}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
       
-</body>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </body>
 </html>
